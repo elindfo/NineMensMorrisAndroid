@@ -1,5 +1,6 @@
 package com.example.erik.ninemensmorrisassignment.shape;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -10,6 +11,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.erik.ninemensmorrisassignment.R;
 import com.example.erik.ninemensmorrisassignment.model.NineMensMorrisGame;
@@ -23,7 +26,6 @@ public class GameView extends View {
 
     private Drawable background;
     private NineMensMorrisGame model;
-    private Drawable blueCircle1;
 
     private int width;
     private int height;
@@ -32,17 +34,19 @@ public class GameView extends View {
 
     private int circleDiameter;
 
+    private Context context;
+
     public GameView(Context context) {
         super(context);
-
+        this.context = context;
     }
 
     public GameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         model = NineMensMorrisGame.getInstance();
-        blueCircle1 = getResources().getDrawable(R.drawable.blue_circle);
         background = getResources().getDrawable(R.drawable.morrisplayfield);
         model.reset();
+        this.context = context;
     }
 
     @Override
@@ -51,12 +55,6 @@ public class GameView extends View {
         this.width = w;
         this.height = h;
         circleDiameter = width / 7 < height / 7 ? width / 7 : height / 7;
-        blueCircle1.setBounds(
-                w / 2 - circleDiameter / 2,
-                h / 2 - circleDiameter / 2,
-                w / 2 + circleDiameter / 2,
-                h / 2 + circleDiameter / 2
-        );
     }
 
     @Override
@@ -77,6 +75,10 @@ public class GameView extends View {
                 redCircle.draw(canvas);
             }
         }
+
+        ((TextView)((Activity) context).findViewById(R.id.current_player_textview)).setText("Current Player: " + model.getCurrentPlayer());
+        ((TextView)((Activity) context).findViewById(R.id.game_state_textview)).setText("State: " + model.getGameState());
+        ((TextView)((Activity) context).findViewById(R.id.game_status_textview)).setText("Status: " + (model.getGameState() == NineMensMorrisGame.GameState.REMOVE_PIECE ? "Remove Piece" : "Move Piece"));
     }
 
     @Override
@@ -103,39 +105,51 @@ public class GameView extends View {
                 int to = getCellIndex(getRowCol(x, y));
                 Log.d(TAG, "ACTION_UP - gamestate: " + model.getGameState());
                 if(model.getGameState() == NineMensMorrisGame.GameState.INITIAL){
-                    boolean legalMove = model.makeInitialMove(to);
-                    if(legalMove){
-                        if(model.isPartOfThreeInARow(to)){
-                            Log.d(TAG, "ACTION_UP - partOfThreeInARow");
-                            model.setGameState(NineMensMorrisGame.GameState.REMOVE_PIECE);
+                    if(to != -1){
+                        boolean legalMove = model.makeInitialMove(to);
+                        if(legalMove){
+                            if(model.isPartOfThreeInARow(to)){
+                                Log.d(TAG, "ACTION_UP - partOfThreeInARow");
+                                model.setGameState(NineMensMorrisGame.GameState.REMOVE_PIECE);
+                            }
+                            else{
+                                model.nextPlayer();
+                            }
+                            invalidate();
                         }
-                        else{
-                            model.nextPlayer();
-                        }
-                        invalidate();
                     }
                 }
                 else if(model.getGameState() == NineMensMorrisGame.GameState.REMOVE_PIECE){
-                    if(model.remove(to)){
-                        model.restoreGameState();
-                        model.nextPlayer();
-                        invalidate();
+                    if(to != -1){
+                        if(model.remove(to)){
+                            model.restoreGameState();
+                            if(model.isWinner()){
+                                invalidate();
+                                Toast.makeText(context, "Player: " + model.getCurrentPlayer() + " is the WINNER", Toast.LENGTH_SHORT).show();
+                                model.setGameState(NineMensMorrisGame.GameState.FINISHED);
+                            }
+                            else{
+                                model.nextPlayer();
+                                invalidate();
+                            }
+                        }
                     }
                 }
                 else{
-                    boolean legalMove = model.makeMove(to, from);
-                    if(legalMove){
-                        if(model.isPartOfThreeInARow(to)){
-                            Log.d(TAG, "ACTION_UP - partOfThreeInARow");
-                            model.setGameState(NineMensMorrisGame.GameState.REMOVE_PIECE);
+                    if(to != -1 && from != -1){
+                        boolean legalMove = model.makeMove(to, from);
+                        if(legalMove){
+                            if(model.isPartOfThreeInARow(to)){
+                                Log.d(TAG, "ACTION_UP - partOfThreeInARow");
+                                model.setGameState(NineMensMorrisGame.GameState.REMOVE_PIECE);
+                            }
+                            else{
+                                model.nextPlayer();
+                            }
+                            invalidate();
                         }
-                        else{
-                            model.nextPlayer();
-                        }
-                        invalidate();
                     }
                 }
-                break;
             }
         }
         return true;

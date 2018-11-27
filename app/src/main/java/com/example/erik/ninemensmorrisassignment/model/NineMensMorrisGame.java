@@ -33,7 +33,7 @@ public class NineMensMorrisGame {
 	}
 
 	public enum GameState{
-		INITIAL, POST_INITIAL, REMOVE_PIECE
+		INITIAL, POST_INITIAL, REMOVE_PIECE, FINISHED
 	}
 
 	private PlayfieldPosition[] playfield;
@@ -344,7 +344,7 @@ public class NineMensMorrisGame {
 	}
 
 	public void restoreGameState(){
-		if(redMarkersPlaced <= 0 && blueMarkersPlaced <= 0){
+		if(redMarkersPlaced >= 9 && blueMarkersPlaced >= 9){
 			gameState = GameState.POST_INITIAL;
 		}
 		else{
@@ -353,31 +353,16 @@ public class NineMensMorrisGame {
 	}
 
 	public void printGame(){
-		String ANSI_RED = "\u001B[31m";
-		String ANSI_BLUE = "\u001B[34m";
-		String ANSI_RESET = "\u001B[0m";
-		String[] coloredPlayfield = new String[playfield.length];
-		for(int i = 0; i < playfield.length; i++){
-			if(playfield[i] == PlayfieldPosition.BLUE){
-				coloredPlayfield[i] = String.format("%-5s", ANSI_BLUE + playfield[i] + ANSI_RESET);
-			}
-			if(playfield[i] == PlayfieldPosition.RED){
-				coloredPlayfield[i] = String.format("%-5s", ANSI_RED + playfield[i] + ANSI_RESET);
-			}
-			if(playfield[i] == PlayfieldPosition.NONE){
-				coloredPlayfield[i] = String.format("%-5s", playfield[i]);
-			}
-		}
 		System.out.println("Current player: " + currentPlayer);
 		System.out.println("Game State: " + gameState);
 		System.out.println("Placed on board - Red: " + redMarkersPlaced + ", Blue: " + blueMarkersPlaced);
 		System.out.println();
-		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", coloredPlayfield[3], "", "", coloredPlayfield[6], "", "", coloredPlayfield[9]);
-		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", "", coloredPlayfield[2], "", coloredPlayfield[5], "", coloredPlayfield[8], "");
-		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", "", "", coloredPlayfield[1], coloredPlayfield[4], coloredPlayfield[7], "", "");
-		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", coloredPlayfield[24], coloredPlayfield[23], coloredPlayfield[22], "", coloredPlayfield[10], coloredPlayfield[11], coloredPlayfield[12]);
-		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", "", "", coloredPlayfield[19], coloredPlayfield[16], coloredPlayfield[13], "", "");
-		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", "", coloredPlayfield[20], "", coloredPlayfield[17], "", coloredPlayfield[14], "");
-		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", coloredPlayfield[21], "", "", coloredPlayfield[18], "", "", coloredPlayfield[15]);
+		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", playfield[3], "", "", playfield[6], "", "", playfield[9]);
+		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", "", playfield[2], "", playfield[5], "", playfield[8], "");
+		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", "", "", playfield[1], playfield[4], playfield[7], "", "");
+		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", playfield[24], playfield[23], playfield[22], "", playfield[10], playfield[11], playfield[12]);
+		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", "", "", playfield[19], playfield[16], playfield[13], "", "");
+		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", "", playfield[20], "", playfield[17], "", playfield[14], "");
+		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", playfield[21], "", "", playfield[18], "", "", playfield[15]);
 	}
 }

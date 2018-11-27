@@ -2,4 +2,7 @@
     <string name="app_name">Nine Men\'s Morris</string>
     <string name="main_activity_new_game_button_text">New Game</string>
     <string name="game_activity_reset_game_button_text">Reset Game</string>
+    <string name="current_player_textview_text">Current Player: </string>
+    <string name="game_state_textview_text">Game State: </string>
+    <string name="game_status_textview_text">Game Status: </string>
 </resources>
