@@ -22,6 +22,8 @@ public class NineMensMorrisGame {
 
 	public static NineMensMorrisGame instance;
 
+
+
 	public enum Player{
 		RED, BLUE
 	}
@@ -31,7 +33,7 @@ public class NineMensMorrisGame {
 	}
 
 	public enum GameState{
-		INITIAL, POST_INITIAL
+		INITIAL, POST_INITIAL, REMOVE_PIECE
 	}
 
 	private PlayfieldPosition[] playfield;
@@ -49,6 +51,10 @@ public class NineMensMorrisGame {
 			instance = new NineMensMorrisGame();
 		}
 		return instance;
+	}
+
+	public PlayfieldPosition[] getPlayfield(){
+		return playfield;
 	}
 
 	public void reset(){
@@ -331,6 +337,19 @@ public class NineMensMorrisGame {
 
 	private Player getRandomPlayer(){
 		return (int)(Math.random() * 10) % 2 == 0 ? Player.RED : Player.BLUE;
+	}
+
+	public void setGameState(GameState gameState) {
+		this.gameState = gameState;
+	}
+
+	public void restoreGameState(){
+		if(redMarkersPlaced <= 0 && blueMarkersPlaced <= 0){
+			gameState = GameState.POST_INITIAL;
+		}
+		else{
+			gameState = GameState.INITIAL;
+		}
 	}
 
 	public void printGame(){
