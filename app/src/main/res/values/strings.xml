@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Nine Men\'s Morris</string>
     <string name="main_activity_new_game_button_text">New Game</string>
+    <string name="game_activity_reset_game_button_text">Reset Game</string>
 </resources>
