@@ -16,14 +16,15 @@ import android.widget.Toast;
 import com.example.erik.ninemensmorrisassignment.R;
 import com.example.erik.ninemensmorrisassignment.model.NineMensMorrisGame;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameView extends View {
+public class GameView extends View implements Serializable{
 
     private static final String TAG = "GameView";
 
-    private Drawable background;
+    private transient Drawable background;
     private NineMensMorrisGame model;
 
     private int width;
@@ -35,7 +36,7 @@ public class GameView extends View {
 
     private List<Piece> pieces;
 
-    private Context context;
+    private transient Context context;
 
     private Piece selectedPiece = null;
 
@@ -292,8 +293,16 @@ public class GameView extends View {
         invalidate();
     }
 
-    private class Piece{
-        private Drawable drawable;
+    public NineMensMorrisGame getModel() {
+        return model;
+    }
+
+    public void setModel(NineMensMorrisGame model) {
+        this.model = model;
+    }
+
+    private class Piece implements Serializable{
+        private transient Drawable drawable;
         private int cellIndex;
         private NineMensMorrisGame.Player player;
 

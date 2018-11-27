@@ -26,7 +26,25 @@ public class GameActivity extends AppCompatActivity {
             gameView.reset();
         });
 
+        if(savedInstanceState != null && savedInstanceState.getSerializable("gameView") != null
+                && savedInstanceState.getSerializable("model") != null){
+            gameView = (GameView) savedInstanceState.getSerializable("gameView");
+            gameView.setModel((NineMensMorrisGame)savedInstanceState.getSerializable("model"));
+        }
+
         currentPlayerText = findViewById(R.id.current_player_textview);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("gameView", gameView);
+        outState.putSerializable("model", gameView.getModel());
     }
 
     public void updateText(String text){

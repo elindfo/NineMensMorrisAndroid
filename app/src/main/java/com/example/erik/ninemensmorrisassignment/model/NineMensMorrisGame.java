@@ -1,5 +1,7 @@
 package com.example.erik.ninemensmorrisassignment.model;
 
+import java.io.Serializable;
+
 /**
  * @author Jonas W�hsl�n, jwi@kth.se. 
  * Revised by Anders Lindstr�m, anderslm@kth.se
@@ -18,21 +20,21 @@ package com.example.erik.ninemensmorrisassignment.model;
  * 
  */
 
-public class NineMensMorrisGame {
+public class NineMensMorrisGame  implements Serializable{
 
 	public static NineMensMorrisGame instance;
 
 
 
-	public enum Player{
+	public enum Player implements Serializable{
 		RED, BLUE
 	}
 
-	public enum PlayfieldPosition {
+	public enum PlayfieldPosition implements Serializable{
 		RED, BLUE, NONE
 	}
 
-	public enum GameState{
+	public enum GameState implements Serializable{
 		INITIAL, POST_INITIAL, REMOVE_PIECE, FINISHED
 	}
 
