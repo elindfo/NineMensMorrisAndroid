@@ -163,126 +163,50 @@ public class GameView extends View {
 
     private int[] getRowCol(int x, int y){
         int row = - 1, col = - 1;
-        if(x < (width * (7.0 / 7))){
-            col = 7;
-        }
-        if(x < (width * (6.0 / 7))){
-            col = 6;
-        }
-        if(x < (width * (5.0 / 7))){
-            col = 5;
-        }
-        if(x < (width * (4.0 / 7))){
-            col = 4;
-        }
-        if(x < (width * (3.0 / 7))){
-            col = 3;
-        }
-        if(x < (width * (2.0 / 7))){
-            col = 2;
-        }
-        if(x < (width * (1.0 / 7))){
-            col = 1;
-        }
-        if(y < (height * (7.0 / 7))){
-            row = 7;
-        }
-        if(y < (height * (6.0 / 7))){
-            row = 6;
-        }
-        if(y < (height * (5.0 / 7))){
-            row = 5;
-        }
-        if(y < (height * (4.0 / 7))){
-            row = 4;
-        }
-        if(y < (height * (3.0 / 7))){
-            row = 3;
-        }
-        if(y < (height * (2.0 / 7))){
-            row = 2;
-        }
-        if(y < (height * (1.0 / 7))){
-            row = 1;
-        }
+        if(x < (width * (7.0 / 7))) col = 7;
+        if(x < (width * (6.0 / 7))) col = 6;
+        if(x < (width * (5.0 / 7))) col = 5;
+        if(x < (width * (4.0 / 7))) col = 4;
+        if(x < (width * (3.0 / 7))) col = 3;
+        if(x < (width * (2.0 / 7))) col = 2;
+        if(x < (width * (1.0 / 7))) col = 1;
+        if(y < (height * (7.0 / 7))) row = 7;
+        if(y < (height * (6.0 / 7))) row = 6;
+        if(y < (height * (5.0 / 7))) row = 5;
+        if(y < (height * (4.0 / 7))) row = 4;
+        if(y < (height * (3.0 / 7))) row = 3;
+        if(y < (height * (2.0 / 7))) row = 2;
+        if(y < (height * (1.0 / 7))) row = 1;
         return new int[]{row, col};
     }
 
     private int getCellIndex(int[] coords){
         int row = coords[0];
         int col = coords[1];
-        if(row == 3 && col == 3){
-            return 1;
-        }
-        if(row == 2 && col == 2){
-            return 2;
-        }
-        if(row == 1 && col == 1){
-            return 3;
-        }
-        if(row == 3 && col == 4){
-            return 4;
-        }
-        if(row == 2 && col == 4){
-            return 5;
-        }
-        if(row == 1 && col == 4){
-            return 6;
-        }
-        if(row == 3 && col == 5){
-            return 7;
-        }
-        if(row == 2 && col == 6){
-            return 8;
-        }
-        if(row == 1 && col == 7){
-            return 9;
-        }
-        if(row == 4 && col == 5){
-            return 10;
-        }
-        if(row == 4 && col == 6){
-            return 11;
-        }
-        if(row == 4 && col == 7){
-            return 12;
-        }
-        if(row == 5 && col == 5){
-            return 13;
-        }
-        if(row == 6 && col == 6){
-            return 14;
-        }
-        if(row == 7 && col == 7){
-            return 15;
-        }
-        if(row == 5 && col == 4){
-            return 16;
-        }
-        if(row == 6 && col == 4){
-            return 17;
-        }
-        if(row == 7 && col == 4){
-            return 18;
-        }
-        if(row == 5 && col == 3){
-            return 19;
-        }
-        if(row == 6 && col == 2){
-            return 20;
-        }
-        if(row == 7 && col == 1){
-            return 21;
-        }
-        if(row == 4 && col == 3){
-            return 22;
-        }
-        if(row == 4 && col == 2){
-            return 23;
-        }
-        if(row == 4 && col == 1){
-            return 24;
-        }
+        if(row == 3 && col == 3) return 1;
+        if(row == 2 && col == 2) return 2;
+        if(row == 1 && col == 1) return 3;
+        if(row == 3 && col == 4) return 4;
+        if(row == 2 && col == 4) return 5;
+        if(row == 1 && col == 4) return 6;
+        if(row == 3 && col == 5) return 7;
+        if(row == 2 && col == 6) return 8;
+        if(row == 1 && col == 7) return 9;
+        if(row == 4 && col == 5) return 10;
+        if(row == 4 && col == 6) return 11;
+        if(row == 4 && col == 7) return 12;
+        if(row == 5 && col == 5) return 13;
+        if(row == 6 && col == 6) return 14;
+        if(row == 7 && col == 7) return 15;
+        if(row == 5 && col == 4) return 16;
+        if(row == 6 && col == 4) return 17;
+        if(row == 7 && col == 4) return 18;
+        if(row == 5 && col == 3) return 19;
+        if(row == 6 && col == 2) return 20;
+        if(row == 7 && col == 1) return 21;
+        if(row == 4 && col == 3) return 22;
+        if(row == 4 && col == 2) return 23;
+        if(row == 4 && col == 1) return 24;
         return -1;
     }
 
@@ -344,6 +268,30 @@ public class GameView extends View {
         return new int[]{10, 10};
     }
 
+    private void updatePieces(){
+        List<Piece> newList = new ArrayList<>();
+        for(int i = 1; i < model.getPlayfield().length; i++){
+            int[] coords = getPiecePlacementCoordsFromRowCol(getRowColFromCellIndex(i));
+            if(model.getPlayfield()[i] == NineMensMorrisGame.PlayfieldPosition.BLUE){
+                Drawable d = getResources().getDrawable(R.drawable.blue_circle);
+                d.setBounds(coords[1], coords[0], coords[1] + circleDiameter, coords[0] + circleDiameter);
+                newList.add(new Piece(d, i, NineMensMorrisGame.Player.BLUE));
+            }
+            if(model.getPlayfield()[i] == NineMensMorrisGame.PlayfieldPosition.RED){
+                Drawable d = getResources().getDrawable(R.drawable.red_circle);
+                d.setBounds(coords[1], coords[0], coords[1] + circleDiameter, coords[0] + circleDiameter);
+                newList.add(new Piece(d, i, NineMensMorrisGame.Player.RED));
+            }
+        }
+        pieces = newList;
+    }
+
+    public void reset(){
+        model.reset();
+        updatePieces();
+        invalidate();
+    }
+
     private class Piece{
         private Drawable drawable;
         private int cellIndex;
@@ -380,27 +328,7 @@ public class GameView extends View {
         }
     }
 
-    public void reset(){
-        model.reset();
-        updatePieces();
-        invalidate();
-    }
 
-    private void updatePieces(){
-        List<Piece> newList = new ArrayList<>();
-        for(int i = 1; i < model.getPlayfield().length; i++){
-            int[] coords = getPiecePlacementCoordsFromRowCol(getRowColFromCellIndex(i));
-            if(model.getPlayfield()[i] == NineMensMorrisGame.PlayfieldPosition.BLUE){
-                Drawable d = getResources().getDrawable(R.drawable.blue_circle);
-                d.setBounds(coords[1], coords[0], coords[1] + circleDiameter, coords[0] + circleDiameter);
-                newList.add(new Piece(d, i, NineMensMorrisGame.Player.BLUE));
-            }
-            if(model.getPlayfield()[i] == NineMensMorrisGame.PlayfieldPosition.RED){
-                Drawable d = getResources().getDrawable(R.drawable.red_circle);
-                d.setBounds(coords[1], coords[0], coords[1] + circleDiameter, coords[0] + circleDiameter);
-                newList.add(new Piece(d, i, NineMensMorrisGame.Player.RED));
-            }
-        }
-        pieces = newList;
-    }
+
+
 }
