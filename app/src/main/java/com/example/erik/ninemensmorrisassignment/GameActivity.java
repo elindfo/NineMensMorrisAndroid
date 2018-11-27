@@ -23,8 +23,7 @@ public class GameActivity extends AppCompatActivity {
         gameView = findViewById(R.id.game_view);
         resetButton = findViewById(R.id.reset_button);
         resetButton.setOnClickListener((v) -> {
-            NineMensMorrisGame.getInstance().reset();
-            gameView.invalidate();
+            gameView.reset();
         });
 
         currentPlayerText = findViewById(R.id.current_player_textview);

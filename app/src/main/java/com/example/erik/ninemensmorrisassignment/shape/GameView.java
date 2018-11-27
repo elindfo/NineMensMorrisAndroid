@@ -3,8 +3,7 @@ package com.example.erik.ninemensmorrisassignment.shape;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
+
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -34,18 +33,29 @@ public class GameView extends View {
 
     private int circleDiameter;
 
+    private List<Piece> pieces;
+
     private Context context;
+
+    private Piece selectedPiece = null;
 
     public GameView(Context context) {
         super(context);
+        model = NineMensMorrisGame.getInstance();
+        pieces = new ArrayList<>();
+        background = getResources().getDrawable(R.drawable.morrisplayfield);
+        model.reset();
+        updatePieces();
         this.context = context;
     }
 
     public GameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         model = NineMensMorrisGame.getInstance();
+        pieces = new ArrayList<>();
         background = getResources().getDrawable(R.drawable.morrisplayfield);
         model.reset();
+        updatePieces();
         this.context = context;
     }
 
@@ -59,21 +69,11 @@ public class GameView extends View {
 
     @Override
     protected void onDraw(Canvas canvas){
-        background.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        background.setBounds(0, 0, width, height);
         background.draw(canvas);
 
-        for(int i = 1; i < model.getPlayfield().length; i++){
-            int[] coords = getPiecePlacementCoordsFromRowCol(getRowColFromCellIndex(i));
-            if(model.getPlayfield()[i] == NineMensMorrisGame.PlayfieldPosition.BLUE){
-                Drawable blueCircle = getResources().getDrawable(R.drawable.blue_circle);
-                blueCircle.setBounds(coords[0], coords[1], coords[0] + circleDiameter, coords[1] + circleDiameter);
-                blueCircle.draw(canvas);
-            }
-            if(model.getPlayfield()[i] == NineMensMorrisGame.PlayfieldPosition.RED){
-                Drawable redCircle = getResources().getDrawable(R.drawable.red_circle);
-                redCircle.setBounds(coords[0], coords[1], coords[0] + circleDiameter, coords[1] + circleDiameter);
-                redCircle.draw(canvas);
-            }
+        for(Piece p : pieces){
+            p.getDrawable().draw(canvas);
         }
 
         ((TextView)((Activity) context).findViewById(R.id.current_player_textview)).setText("Current Player: " + model.getCurrentPlayer());
@@ -86,15 +86,25 @@ public class GameView extends View {
 
         switch(event.getAction()){
             case MotionEvent.ACTION_MOVE:{
-                int x = (int)event.getX();
-                int y = (int)event.getY();
+                if(model.getGameState() == NineMensMorrisGame.GameState.POST_INITIAL){
+                    int x = (int)event.getX();
+                    int y = (int)event.getY();
+                    if(selectedPiece != null){
+                        selectedPiece.getDrawable().setBounds(x - circleDiameter / 2, y - circleDiameter / 2, x + circleDiameter / 2, y + circleDiameter / 2);
+                        invalidate();
+                    }
+                }
                 //Log.d(TAG, "ACTION_MOVE - x: " + x + ", y: " + y);
-
                 break;
             }
             case MotionEvent.ACTION_DOWN:{
                 int x = (int)event.getX();
                 int y = (int)event.getY();
+                for(Piece p : pieces){
+                    if(p.getPlayer() == model.getCurrentPlayer() && p.cellIndex == getCellIndex(getRowCol(x, y))){
+                        selectedPiece = p;
+                    }
+                }
 
                 from = getCellIndex(getRowCol(x, y));
                 break;
@@ -115,7 +125,6 @@ public class GameView extends View {
                             else{
                                 model.nextPlayer();
                             }
-                            invalidate();
                         }
                     }
                 }
@@ -124,13 +133,11 @@ public class GameView extends View {
                         if(model.remove(to)){
                             model.restoreGameState();
                             if(model.isWinner()){
-                                invalidate();
                                 Toast.makeText(context, "Player: " + model.getCurrentPlayer() + " is the WINNER", Toast.LENGTH_SHORT).show();
                                 model.setGameState(NineMensMorrisGame.GameState.FINISHED);
                             }
                             else{
                                 model.nextPlayer();
-                                invalidate();
                             }
                         }
                     }
@@ -146,11 +153,12 @@ public class GameView extends View {
                             else{
                                 model.nextPlayer();
                             }
-                            invalidate();
                         }
                     }
                 }
+                updatePieces();
             }
+            invalidate();
         }
         return true;
     }
@@ -336,5 +344,65 @@ public class GameView extends View {
         if(row == 7 && col == 4) return new int[]{circleDiameter * 3, circleDiameter * 6};
         if(row == 7 && col == 7) return new int[]{circleDiameter * 6, circleDiameter * 6};
         return new int[]{10, 10};
+    }
+
+    private class Piece{
+        private Drawable drawable;
+        private int cellIndex;
+        private NineMensMorrisGame.Player player;
+
+        public Piece(Drawable drawable, int cellIndex, NineMensMorrisGame.Player player) {
+            this.drawable = drawable;
+            this.cellIndex = cellIndex;
+            this.player = player;
+        }
+
+        public Drawable getDrawable() {
+            return drawable;
+        }
+
+        public void setDrawable(Drawable drawable) {
+            this.drawable = drawable;
+        }
+
+        public int getCellIndex() {
+            return cellIndex;
+        }
+
+        public void setCellIndex(int cellIndex) {
+            this.cellIndex = cellIndex;
+        }
+
+        public NineMensMorrisGame.Player getPlayer() {
+            return player;
+        }
+
+        public void setPlayer(NineMensMorrisGame.Player player) {
+            this.player = player;
+        }
+    }
+
+    public void reset(){
+        model.reset();
+        pieces = new ArrayList<>();
+        invalidate();
+    }
+
+    private void updatePieces(){
+        List<Piece> newList = new ArrayList<>();
+        for(int i = 1; i < model.getPlayfield().length; i++){
+            int[] coords = getPiecePlacementCoordsFromRowCol(getRowColFromCellIndex(i));
+            if(model.getPlayfield()[i] == NineMensMorrisGame.PlayfieldPosition.BLUE){
+                Drawable d = getResources().getDrawable(R.drawable.blue_circle);
+                d.setBounds(coords[0], coords[1], coords[0] + circleDiameter, coords[1] + circleDiameter);
+                newList.add(new Piece(d, i, NineMensMorrisGame.Player.BLUE));
+            }
+            if(model.getPlayfield()[i] == NineMensMorrisGame.PlayfieldPosition.RED){
+                Drawable d = getResources().getDrawable(R.drawable.red_circle);
+                d.setBounds(coords[0], coords[1], coords[0] + circleDiameter, coords[1] + circleDiameter);
+                newList.add(new Piece(d, i, NineMensMorrisGame.Player.RED));
+            }
+        }
+        pieces = newList;
     }
 }
