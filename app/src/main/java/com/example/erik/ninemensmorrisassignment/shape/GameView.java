@@ -44,7 +44,6 @@ public class GameView extends View {
         model = NineMensMorrisGame.getInstance();
         pieces = new ArrayList<>();
         background = getResources().getDrawable(R.drawable.morrisplayfield);
-        model.reset();
         updatePieces();
         this.context = context;
     }
@@ -54,7 +53,6 @@ public class GameView extends View {
         model = NineMensMorrisGame.getInstance();
         pieces = new ArrayList<>();
         background = getResources().getDrawable(R.drawable.morrisplayfield);
-        model.reset();
         updatePieces();
         this.context = context;
     }
@@ -320,29 +318,29 @@ public class GameView extends View {
         int row = rowCol[0];
         int col = rowCol[1];
         if(row == 1 && col == 1) return new int[]{0, 0};
-        if(row == 1 && col == 4) return new int[]{circleDiameter * 3, 0};
-        if(row == 1 && col == 7) return new int[]{circleDiameter * 6, 0};
-        if(row == 2 && col == 2) return new int[]{circleDiameter * 1, circleDiameter};
-        if(row == 2 && col == 4) return new int[]{circleDiameter * 3, circleDiameter};
-        if(row == 2 && col == 6) return new int[]{circleDiameter * 5, circleDiameter};
-        if(row == 3 && col == 3) return new int[]{circleDiameter * 2, circleDiameter * 2};
-        if(row == 3 && col == 4) return new int[]{circleDiameter * 3, circleDiameter * 2};
-        if(row == 3 && col == 5) return new int[]{circleDiameter * 4, circleDiameter * 2};
-        if(row == 4 && col == 1) return new int[]{0, circleDiameter * 3};
-        if(row == 4 && col == 2) return new int[]{circleDiameter * 1, circleDiameter * 3};
-        if(row == 4 && col == 3) return new int[]{circleDiameter * 2, circleDiameter * 3};
-        if(row == 4 && col == 5) return new int[]{circleDiameter * 4, circleDiameter * 3};
-        if(row == 4 && col == 6) return new int[]{circleDiameter * 5, circleDiameter * 3};
-        if(row == 4 && col == 7) return new int[]{circleDiameter * 6, circleDiameter * 3};
-        if(row == 5 && col == 3) return new int[]{circleDiameter * 2, circleDiameter * 4};
-        if(row == 5 && col == 4) return new int[]{circleDiameter * 3, circleDiameter * 4};
-        if(row == 5 && col == 5) return new int[]{circleDiameter * 4, circleDiameter * 4};
-        if(row == 6 && col == 2) return new int[]{circleDiameter * 1, circleDiameter * 5};
-        if(row == 6 && col == 4) return new int[]{circleDiameter * 3, circleDiameter * 5};
-        if(row == 6 && col == 6) return new int[]{circleDiameter * 5, circleDiameter * 5};
-        if(row == 7 && col == 1) return new int[]{0, circleDiameter * 6};
-        if(row == 7 && col == 4) return new int[]{circleDiameter * 3, circleDiameter * 6};
-        if(row == 7 && col == 7) return new int[]{circleDiameter * 6, circleDiameter * 6};
+        if(row == 1 && col == 4) return new int[]{0, (width / 7) * 3};
+        if(row == 1 && col == 7) return new int[]{0, (width / 7) * 6};
+        if(row == 2 && col == 2) return new int[]{(height / 7), (width / 7) * 1};
+        if(row == 2 && col == 4) return new int[]{(height / 7), (width / 7) * 3};
+        if(row == 2 && col == 6) return new int[]{(height / 7), (width / 7) * 5};
+        if(row == 3 && col == 3) return new int[]{(height / 7) * 2, (width / 7) * 2};
+        if(row == 3 && col == 4) return new int[]{(height / 7) * 2, (width / 7) * 3};
+        if(row == 3 && col == 5) return new int[]{(height / 7) * 2, (width / 7) * 4};
+        if(row == 4 && col == 1) return new int[]{(height / 7) * 3, 0};
+        if(row == 4 && col == 2) return new int[]{(height / 7) * 3, (width / 7) * 1};
+        if(row == 4 && col == 3) return new int[]{(height / 7) * 3, (width / 7) * 2};
+        if(row == 4 && col == 5) return new int[]{(height / 7) * 3, (width / 7) * 4};
+        if(row == 4 && col == 6) return new int[]{(height / 7) * 3, (width / 7) * 5};
+        if(row == 4 && col == 7) return new int[]{(height / 7) * 3, (width / 7) * 6};
+        if(row == 5 && col == 3) return new int[]{(height / 7) * 4, (width / 7) * 2};
+        if(row == 5 && col == 4) return new int[]{(height / 7) * 4, (width / 7) * 3};
+        if(row == 5 && col == 5) return new int[]{(height / 7) * 4, (width / 7) * 4};
+        if(row == 6 && col == 2) return new int[]{(height / 7) * 5, (width / 7) * 1};
+        if(row == 6 && col == 4) return new int[]{(height / 7) * 5, (width / 7) * 3};
+        if(row == 6 && col == 6) return new int[]{(height / 7) * 5, (width / 7) * 5};
+        if(row == 7 && col == 1) return new int[]{(height / 7) * 6, 0};
+        if(row == 7 && col == 4) return new int[]{(height / 7) * 6, (width / 7) * 3};
+        if(row == 7 && col == 7) return new int[]{(height / 7) * 6, (width / 7) * 6};
         return new int[]{10, 10};
     }
 
@@ -384,7 +382,7 @@ public class GameView extends View {
 
     public void reset(){
         model.reset();
-        pieces = new ArrayList<>();
+        updatePieces();
         invalidate();
     }
 
@@ -394,12 +392,12 @@ public class GameView extends View {
             int[] coords = getPiecePlacementCoordsFromRowCol(getRowColFromCellIndex(i));
             if(model.getPlayfield()[i] == NineMensMorrisGame.PlayfieldPosition.BLUE){
                 Drawable d = getResources().getDrawable(R.drawable.blue_circle);
-                d.setBounds(coords[0], coords[1], coords[0] + circleDiameter, coords[1] + circleDiameter);
+                d.setBounds(coords[1], coords[0], coords[1] + circleDiameter, coords[0] + circleDiameter);
                 newList.add(new Piece(d, i, NineMensMorrisGame.Player.BLUE));
             }
             if(model.getPlayfield()[i] == NineMensMorrisGame.PlayfieldPosition.RED){
                 Drawable d = getResources().getDrawable(R.drawable.red_circle);
-                d.setBounds(coords[0], coords[1], coords[0] + circleDiameter, coords[1] + circleDiameter);
+                d.setBounds(coords[1], coords[0], coords[1] + circleDiameter, coords[0] + circleDiameter);
                 newList.add(new Piece(d, i, NineMensMorrisGame.Player.RED));
             }
         }
