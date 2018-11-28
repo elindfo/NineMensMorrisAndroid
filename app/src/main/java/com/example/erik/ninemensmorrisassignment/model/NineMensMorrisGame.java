@@ -20,13 +20,11 @@ import java.io.Serializable;
  * 
  */
 
-public class NineMensMorrisGame  implements Serializable{
+public class NineMensMorrisGame  {
 
 	public static NineMensMorrisGame instance;
 
-
-
-	public enum Player implements Serializable{
+	public enum Player {
 		RED, BLUE
 	}
 
@@ -38,6 +36,7 @@ public class NineMensMorrisGame  implements Serializable{
 		INITIAL, POST_INITIAL, REMOVE_PIECE, FINISHED
 	}
 
+	private SaveTool saveTool;
 	private PlayfieldPosition[] playfield;
 	private int blueMarker, redMarker;
 	private int redMarkersPlaced, blueMarkersPlaced;
@@ -351,6 +350,12 @@ public class NineMensMorrisGame  implements Serializable{
 		}
 		else{
 			gameState = GameState.INITIAL;
+		}
+	}
+
+	public void saveModel(PlayfieldPosition[] playfieldPositions){
+		if(playfieldPositions != null){
+			playfield = playfieldPositions;
 		}
 	}
 

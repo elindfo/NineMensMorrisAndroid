@@ -67,7 +67,7 @@ public class GameView extends View implements Serializable{
     }
 
     @Override
-    protected void onDraw(Canvas canvas){
+    public void onDraw(Canvas canvas){
         background.setBounds(0, 0, width, height);
         background.draw(canvas);
 
@@ -301,7 +301,7 @@ public class GameView extends View implements Serializable{
         this.model = model;
     }
 
-    private class Piece implements Serializable{
+    private class Piece{
         private transient Drawable drawable;
         private int cellIndex;
         private NineMensMorrisGame.Player player;
