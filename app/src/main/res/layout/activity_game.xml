@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     tools:context=".GameActivity">
 
     <com.example.erik.ninemensmorrisassignment.shape.GameView
         android:id="@+id/game_view"
-        android:layout_width="0dp"
-        android:layout_height="386dp"
+        android:layout_width="500px"
+        android:layout_height="500px"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
@@ -18,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@color/colorPrimaryDark"
+
         app:layout_constraintTop_toBottomOf="@+id/reset_button" />
 
     <TextView
@@ -28,6 +29,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/current_player_textview_text"
+        android:textColor="@color/colorAccent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,6 +40,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:text="@string/game_state_textview_text"
+        android:textColor="@color/colorAccent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/current_player_textview" />
 
@@ -49,6 +52,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="24dp"
         android:text="@string/game_status_textview_text"
+        android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toTopOf="@+id/game_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/game_state_textview" />
