@@ -75,6 +75,11 @@ public class GameView extends View {
         }
 
         ((TextView)((Activity) context).findViewById(R.id.current_player_textview)).setText("Current Player: " + model.getCurrentPlayer());
+        if(NineMensMorrisGame.getInstance().getCurrentPlayer() == NineMensMorrisGame.Player.BLUE){
+            ((TextView)((Activity) context).findViewById(R.id.current_player_textview)).setTextColor(context.getColor(R.color.blue));
+        } else {
+            ((TextView)((Activity) context).findViewById(R.id.current_player_textview)).setTextColor(context.getColor(R.color.red));
+        }
         ((TextView)((Activity) context).findViewById(R.id.game_state_textview)).setText("State: " + model.getGameState());
         ((TextView)((Activity) context).findViewById(R.id.game_status_textview)).setText("Status: " + (model.getGameState() == NineMensMorrisGame.GameState.REMOVE_PIECE ? "Remove Piece" : "Move Piece"));
     }

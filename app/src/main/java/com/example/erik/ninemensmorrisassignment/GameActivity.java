@@ -1,5 +1,8 @@
 package com.example.erik.ninemensmorrisassignment;
 
+import android.content.res.ColorStateList;
+import android.content.res.Configuration;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -31,8 +34,6 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        gameView.reset();
-        gameView.invalidate();
         super.onStart();
     }
 
@@ -49,6 +50,19 @@ public class GameActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStop() {
+
+        super.onStop();
+    }
+
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
@@ -56,6 +70,13 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void updateText(String text){
+        StringBuffer sb = new StringBuffer();
+        if(NineMensMorrisGame.getInstance().getCurrentPlayer() == NineMensMorrisGame.Player.BLUE){
+            currentPlayerText.setTextColor(getApplicationContext().getColor(R.color.blue));
+        }
+        else{
+            currentPlayerText.setTextColor(getApplicationContext().getColor(R.color.red));
+        }
         currentPlayerText.setText(text);
     }
 }
