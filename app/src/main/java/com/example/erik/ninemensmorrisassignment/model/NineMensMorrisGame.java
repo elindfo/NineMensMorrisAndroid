@@ -3,7 +3,6 @@ package com.example.erik.ninemensmorrisassignment.model;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.erik.ninemensmorrisassignment.MainActivity;
 import com.example.erik.ninemensmorrisassignment.shape.GameView;
 
 import java.io.FileInputStream;
@@ -14,8 +13,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
+ * Singleton class handling the logic for a game of Nine Men's Morris
  * @author Jonas W�hsl�n, jwi@kth.se. 
  * Revised by Anders Lindstr�m, anderslm@kth.se
+ * Revised by Erik Lindfors
  */
 
 /*
@@ -35,14 +36,23 @@ public class NineMensMorrisGame {
 
 	private static NineMensMorrisGame instance;
 
+	/**
+	 * Enum representing player colors
+	 */
 	public enum Player{
 		RED, BLUE
 	}
 
+	/**
+	 * Enum representing the playingfield tile values
+	 */
 	public enum PlayfieldPosition {
 		RED, BLUE, NONE
 	}
 
+	/**
+	 * Enum representing the different game states
+	 */
 	public enum GameState{
 		INITIAL, POST_INITIAL, REMOVE_PIECE, FINISHED
 	}
@@ -64,6 +74,10 @@ public class NineMensMorrisGame {
 		return instance;
 	}
 
+	/**
+	 * Method used to serialize and store the current state of the game to device
+	 * @return true if successful
+	 */
 	public boolean save(){
 		Log.d(GameView.TAG, "Serialize: SAVE");
 		FileOutputStream fos = null;
@@ -105,6 +119,10 @@ public class NineMensMorrisGame {
 		return false;
 	}
 
+	/**
+	 * Method used to deserialize and retrieve the current state of the game from the device
+	 * @return true if successful
+	 */
 	public boolean load(){
 		Log.d(GameView.TAG, "Serialize: LOAD");
 		FileInputStream fis = null;
@@ -149,6 +167,9 @@ public class NineMensMorrisGame {
 	}
 
 
+	/**
+	 * Reset the game to initial state
+	 */
 	public void reset(){
 		playfield = new PlayfieldPosition[25]; // zeroes
 		for(int i = 0; i < playfield.length; i++){
@@ -160,6 +181,12 @@ public class NineMensMorrisGame {
 		currentPlayer = getRandomPlayer();
 	}
 
+	/**
+	 * Method used to move pieces while in GameState.INITIAL
+	 * @param to
+	 * @return true if move was successful
+	 * @throws IllegalArgumentException
+	 */
 	public boolean makeInitialMove(int to) throws IllegalArgumentException{
 		if(gameState == GameState.INITIAL) {
 			if (to < 0 || to >= playfield.length) {
@@ -196,6 +223,13 @@ public class NineMensMorrisGame {
 		return false;
 	}
 
+	/**
+	 * Method used to move pieces while in GameState.POST_INITIAL
+	 * @param to
+	 * @param from
+	 * @return true if move was successful
+	 * @throws IllegalArgumentException
+	 */
 	public boolean makeMove(int to, int from) throws IllegalArgumentException{
 		if(gameState == GameState.POST_INITIAL){
 			if(to < 0 || to >= playfield.length || from < 0 || from >= playfield.length){
@@ -232,6 +266,12 @@ public class NineMensMorrisGame {
 		return false;
 	}
 
+	/**
+	 * Method used to check if a move will form a valid three-in-a-row
+	 * @param to
+	 * @return true if successful
+	 * @throws IllegalArgumentException
+	 */
 	public boolean isPartOfThreeInARow(int to) throws IllegalArgumentException{
 		if(to < 0 || to >= playfield.length){
 			throw new IllegalArgumentException();
@@ -289,6 +329,9 @@ public class NineMensMorrisGame {
 		return false;
 	}
 
+	/**
+	 * Method used to change to next player
+	 */
 	public void nextPlayer(){
 		if(currentPlayer == Player.RED){
 			currentPlayer = Player.BLUE;
@@ -298,6 +341,12 @@ public class NineMensMorrisGame {
 		}
 	}
 
+	/**
+	 * Method used to remove a piece from the board
+	 * @param from
+	 * @return true if successful
+	 * @throws IllegalArgumentException
+	 */
 	public boolean remove(int from) throws IllegalArgumentException{
 		if(from < 0 || from >= playfield.length){
 			throw new IllegalArgumentException();
@@ -319,6 +368,10 @@ public class NineMensMorrisGame {
 		return false;
 	}
 
+	/**
+	 * Method used to check if the current player has won the game
+	 * @return true if current player has won
+	 */
 	public boolean isWinner() {
 		if(currentPlayer == Player.RED){
 			if(blueMarker < 3){
@@ -333,6 +386,13 @@ public class NineMensMorrisGame {
 		return false;
 	}
 
+	/**
+	 * Method used to check if the current move is valid
+	 * @param to
+	 * @param from
+	 * @return true if move is valid
+	 * @throws IllegalArgumentException
+	 */
 	private boolean isValidMove(int to, int from) throws IllegalArgumentException{
 		if(to < 0 || to >= playfield.length || from < 0 || from >= playfield.length){
 			throw new IllegalArgumentException();
@@ -393,6 +453,26 @@ public class NineMensMorrisGame {
 		return false;
 	}
 
+	/**
+	 * Method used to randomize a Player object
+	 * @return Player
+	 */
+	private Player getRandomPlayer(){
+		return (int)(Math.random() * 10) % 2 == 0 ? Player.RED : Player.BLUE;
+	}
+
+	/**
+	 * Method used to return to the correct GameState from GameState.REMOVE_PIECE
+	 */
+	public void restoreGameState(){
+		if(redMarkersPlaced >= 9 && blueMarkersPlaced >= 9){
+			gameState = GameState.POST_INITIAL;
+		}
+		else{
+			gameState = GameState.INITIAL;
+		}
+	}
+
 	public Player getCurrentPlayer(){
 		return currentPlayer;
 	}
@@ -401,24 +481,11 @@ public class NineMensMorrisGame {
 		return playfield;
 	}
 
-	private Player getRandomPlayer(){
-		return (int)(Math.random() * 10) % 2 == 0 ? Player.RED : Player.BLUE;
-	}
-
 	public GameState getGameState(){
 		return gameState;
 	}
 
 	public void setGameState(GameState gameState) {
 		this.gameState = gameState;
-	}
-
-	public void restoreGameState(){
-		if(redMarkersPlaced >= 9 && blueMarkersPlaced >= 9){
-			gameState = GameState.POST_INITIAL;
-		}
-		else{
-			gameState = GameState.INITIAL;
-		}
 	}
 }
