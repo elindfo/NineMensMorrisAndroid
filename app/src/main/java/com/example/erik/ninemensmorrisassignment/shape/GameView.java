@@ -39,27 +39,24 @@ public class GameView extends View {
         model = NineMensMorrisGame.getInstance();
         background = getResources().getDrawable(R.drawable.morrisplayfield);
         this.context = context;
-        setWillNotDraw(false);
-        updatePieces();
-        invalidate();
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        Log.d(TAG, "onSizeChanged: called");
         super.onSizeChanged(w, h, oldw, oldh);
         this.width = w;
         this.height = h;
         circleDiameter = width / 7 < height / 7 ? width / 7 : height / 7;
+        background.setBounds(0, 0, width, height);
+        updatePieces();
     }
 
     @Override
     protected void onDraw(Canvas canvas){
-        background.setBounds(0, 0, width, height);
-        background.draw(canvas);
+        Log.d(TAG, "onDraw: called");
 
-        for(Piece p : pieces){
-            p.getDrawable().draw(canvas);
-        }
+        background.draw(canvas);
 
         ((TextView)((Activity) context).findViewById(R.id.current_player_textview)).setText("Current Player: " + model.getCurrentPlayer());
         if(model.getCurrentPlayer() == NineMensMorrisGame.Player.BLUE){
@@ -69,6 +66,11 @@ public class GameView extends View {
         }
         ((TextView)((Activity) context).findViewById(R.id.game_state_textview)).setText("State: " + model.getGameState());
         ((TextView)((Activity) context).findViewById(R.id.game_status_textview)).setText("Status: " + (model.getGameState() == NineMensMorrisGame.GameState.REMOVE_PIECE ? "Remove Piece" : "Move Piece"));
+
+        for(int i = 0; i < pieces.size(); i++){
+            Log.d(TAG, "for piece loop: " + pieces.get(i).getDrawable().getBounds());
+            pieces.get(i).getDrawable().draw(canvas);
+        }
     }
 
     @Override
@@ -274,6 +276,7 @@ public class GameView extends View {
                 newList.add(new Piece(d, i, NineMensMorrisGame.Player.RED));
             }
         }
+        Log.d(TAG, "updatePieces: " + newList.size());
         pieces = newList;
     }
 
