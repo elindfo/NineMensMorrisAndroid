@@ -39,27 +39,24 @@ public class GameView extends View {
         model = NineMensMorrisGame.getInstance();
         background = getResources().getDrawable(R.drawable.morrisplayfield);
         this.context = context;
-        setWillNotDraw(false);
-        updatePieces();
-        invalidate();
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        Log.d(TAG, "onSizeChanged: called");
         super.onSizeChanged(w, h, oldw, oldh);
         this.width = w;
         this.height = h;
         circleDiameter = width / 7 < height / 7 ? width / 7 : height / 7;
+        background.setBounds(0, 0, width, height);
+        updatePieces();
     }
 
     @Override
     protected void onDraw(Canvas canvas){
-        background.setBounds(0, 0, width, height);
-        background.draw(canvas);
+        Log.d(TAG, "onDraw: called");
 
-        for(Piece p : pieces){
-            p.getDrawable().draw(canvas);
-        }
+        background.draw(canvas);
 
         ((TextView)((Activity) context).findViewById(R.id.current_player_textview)).setText("Current Player: " + model.getCurrentPlayer());
         if(model.getCurrentPlayer() == NineMensMorrisGame.Player.BLUE){
@@ -69,6 +66,11 @@ public class GameView extends View {
         }
         ((TextView)((Activity) context).findViewById(R.id.game_state_textview)).setText("State: " + model.getGameState());
         ((TextView)((Activity) context).findViewById(R.id.game_status_textview)).setText("Status: " + (model.getGameState() == NineMensMorrisGame.GameState.REMOVE_PIECE ? "Remove Piece" : "Move Piece"));
+
+        for(int i = 0; i < pieces.size(); i++){
+            Log.d(TAG, "for piece loop: " + pieces.get(i).getDrawable().getBounds());
+            pieces.get(i).getDrawable().draw(canvas);
+        }
     }
 
     @Override
@@ -233,29 +235,29 @@ public class GameView extends View {
         int row = rowCol[0];
         int col = rowCol[1];
         if(row == 1 && col == 1) return new int[]{0, 0};
-        if(row == 1 && col == 4) return new int[]{0, (width / 7) * 3};
+        if(row == 1 && col == 4) return new int[]{0, (width / 7 + 1) * 3};
         if(row == 1 && col == 7) return new int[]{0, (width / 7) * 6};
-        if(row == 2 && col == 2) return new int[]{(height / 7), (width / 7) * 1};
-        if(row == 2 && col == 4) return new int[]{(height / 7), (width / 7) * 3};
-        if(row == 2 && col == 6) return new int[]{(height / 7), (width / 7) * 5};
-        if(row == 3 && col == 3) return new int[]{(height / 7) * 2, (width / 7) * 2};
-        if(row == 3 && col == 4) return new int[]{(height / 7) * 2, (width / 7) * 3};
-        if(row == 3 && col == 5) return new int[]{(height / 7) * 2, (width / 7) * 4};
+        if(row == 2 && col == 2) return new int[]{(height / 7), (width / 7 + 1) * 1};
+        if(row == 2 && col == 4) return new int[]{(height / 7), (width / 7 + 1) * 3};
+        if(row == 2 && col == 6) return new int[]{(height / 7), (width / 7 + 1) * 5};
+        if(row == 3 && col == 3) return new int[]{(height / 7) * 2, (width / 7 + 1) * 2};
+        if(row == 3 && col == 4) return new int[]{(height / 7) * 2, (width / 7 + 1) * 3};
+        if(row == 3 && col == 5) return new int[]{(height / 7) * 2, (width / 7 + 1) * 4};
         if(row == 4 && col == 1) return new int[]{(height / 7) * 3, 0};
-        if(row == 4 && col == 2) return new int[]{(height / 7) * 3, (width / 7) * 1};
-        if(row == 4 && col == 3) return new int[]{(height / 7) * 3, (width / 7) * 2};
-        if(row == 4 && col == 5) return new int[]{(height / 7) * 3, (width / 7) * 4};
-        if(row == 4 && col == 6) return new int[]{(height / 7) * 3, (width / 7) * 5};
-        if(row == 4 && col == 7) return new int[]{(height / 7) * 3, (width / 7) * 6};
-        if(row == 5 && col == 3) return new int[]{(height / 7) * 4, (width / 7) * 2};
-        if(row == 5 && col == 4) return new int[]{(height / 7) * 4, (width / 7) * 3};
-        if(row == 5 && col == 5) return new int[]{(height / 7) * 4, (width / 7) * 4};
-        if(row == 6 && col == 2) return new int[]{(height / 7) * 5, (width / 7) * 1};
-        if(row == 6 && col == 4) return new int[]{(height / 7) * 5, (width / 7) * 3};
-        if(row == 6 && col == 6) return new int[]{(height / 7) * 5, (width / 7) * 5};
+        if(row == 4 && col == 2) return new int[]{(height / 7) * 3, (width / 7 + 1) * 1};
+        if(row == 4 && col == 3) return new int[]{(height / 7) * 3, (width / 7 + 1) * 2};
+        if(row == 4 && col == 5) return new int[]{(height / 7) * 3, (width / 7 + 1) * 4};
+        if(row == 4 && col == 6) return new int[]{(height / 7) * 3, (width / 7 + 1) * 5};
+        if(row == 4 && col == 7) return new int[]{(height / 7) * 3, (width / 7 + 1) * 6};
+        if(row == 5 && col == 3) return new int[]{(height / 7) * 4, (width / 7 + 1) * 2};
+        if(row == 5 && col == 4) return new int[]{(height / 7) * 4, (width / 7 + 1) * 3};
+        if(row == 5 && col == 5) return new int[]{(height / 7) * 4, (width / 7 + 1) * 4};
+        if(row == 6 && col == 2) return new int[]{(height / 7) * 5, (width / 7 + 1) * 1};
+        if(row == 6 && col == 4) return new int[]{(height / 7) * 5, (width / 7 + 1) * 3};
+        if(row == 6 && col == 6) return new int[]{(height / 7) * 5, (width / 7 + 1) * 5};
         if(row == 7 && col == 1) return new int[]{(height / 7) * 6, 0};
-        if(row == 7 && col == 4) return new int[]{(height / 7) * 6, (width / 7) * 3};
-        if(row == 7 && col == 7) return new int[]{(height / 7) * 6, (width / 7) * 6};
+        if(row == 7 && col == 4) return new int[]{(height / 7) * 6, (width / 7 + 1) * 3};
+        if(row == 7 && col == 7) return new int[]{(height / 7) * 6, (width / 7 + 1) * 6};
         return new int[]{10, 10};
     }
 
@@ -274,6 +276,7 @@ public class GameView extends View {
                 newList.add(new Piece(d, i, NineMensMorrisGame.Player.RED));
             }
         }
+        Log.d(TAG, "updatePieces: " + newList.size());
         pieces = newList;
     }
 
