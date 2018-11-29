@@ -6,16 +6,22 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erik.ninemensmorrisassignment.model.NineMensMorrisGame;
 import com.example.erik.ninemensmorrisassignment.shape.GameView;
 
+/**
+ * Game activity holds the view that the game is played on.
+ */
 public class GameActivity extends AppCompatActivity {
 
     private GameView gameView;
 
+    /**
+     * Will try to load saved state only first time game is started after it has been destroyed.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,32 +30,20 @@ public class GameActivity extends AppCompatActivity {
         gameView = findViewById(R.id.game_view);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
+    /**
+     * Saves model state at activity destroyed.
+     */
     @Override
     protected void onDestroy(){
         NineMensMorrisGame.getInstance().save();
         super.onDestroy();
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-    }
-
+    /**
+     * Inflates the menu with a reset button.
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -57,6 +51,11 @@ public class GameActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Method to respond to menu actions.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){

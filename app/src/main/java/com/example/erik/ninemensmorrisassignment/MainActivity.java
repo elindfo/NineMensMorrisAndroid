@@ -6,12 +6,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.Toast;
 
+/**
+ * Activity containing welcome screen with name of app and a menu button for resuming / new game.
+ * This activity is the starting activity.
+ */
 public class MainActivity extends AppCompatActivity {
-
-    private Button newGameButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,12 +20,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    /**
+     * Method to respond to menu actions.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        //TODO change name to resume game
         switch (item.getItemId()){
             case R.id.menu_new_game:
-                Toast.makeText(this, "New game started", Toast.LENGTH_LONG);
+                Toast.makeText(this, "1, 2, 3, GAME ON!", Toast.LENGTH_LONG);
                 Intent intent = new Intent(this, GameActivity.class);
                 startActivity(intent);
                 return true;

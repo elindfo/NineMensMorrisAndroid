@@ -19,6 +19,12 @@ import com.example.erik.ninemensmorrisassignment.model.NineMensMorrisGame;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Visual representation of the game Nine Men's Morris.
+ * This class will visualize the playingfield and recognize touch events.
+ * At runtime gameview will draw pieces on the playing field and convert a piece's coordinates to
+ * a place number that the model can use in it's logic.
+ */
 public class GameView extends View {
 
     public static final String TAG = "GameView";
@@ -33,17 +39,29 @@ public class GameView extends View {
     private Context context;
     private Piece selectedPiece = null;
 
+    /**
+     * Construct and initialize an instance of GameView
+     * @param context
+     * @param attrs
+     */
     public GameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        Log.d(TAG, "GameView(Context, AttributeSet) called");
         model = NineMensMorrisGame.getInstance();
         background = getResources().getDrawable(R.drawable.morrisplayfield);
         this.context = context;
     }
 
+    /**
+     * This method is called to compute the size of current the current view.
+     * It sets width and height to correct values and updates the current placed
+     * pieces.
+     * @param w
+     * @param h
+     * @param oldw
+     * @param oldh
+     */
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        Log.d(TAG, "onSizeChanged: called");
         super.onSizeChanged(w, h, oldw, oldh);
         this.width = w;
         this.height = h;
@@ -52,9 +70,13 @@ public class GameView extends View {
         updatePieces();
     }
 
+    /**
+     * Method is called to update view. Alternates color on current player text and draws or redraws
+     * everything currently on gameview.
+     * @param canvas
+     */
     @Override
     protected void onDraw(Canvas canvas){
-        Log.d(TAG, "onDraw: called");
 
         background.draw(canvas);
 
@@ -68,11 +90,18 @@ public class GameView extends View {
         ((TextView)((Activity) context).findViewById(R.id.game_status_textview)).setText("Status: " + (model.getGameState() == NineMensMorrisGame.GameState.REMOVE_PIECE ? "Remove Piece" : "Move Piece"));
 
         for(int i = 0; i < pieces.size(); i++){
-            Log.d(TAG, "for piece loop: " + pieces.get(i).getDrawable().getBounds());
             pieces.get(i).getDrawable().draw(canvas);
         }
     }
 
+    /**
+     * This method responds to touch events made on devices.
+     * Checks what event happened and what state the game is in and acts accordingly to the rules
+     * of nine men's morris.
+     * Updates and invalidates view.
+     * @param event
+     * @return
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event){
 
@@ -104,13 +133,11 @@ public class GameView extends View {
                 int x = (int)event.getX();
                 int y = (int)event.getY();
                 int to = getCellIndex(getRowCol(x, y));
-                Log.d(TAG, "ACTION_UP - gamestate: " + model.getGameState());
                 if(model.getGameState() == NineMensMorrisGame.GameState.INITIAL){
                     if(to != -1){
                         boolean legalMove = model.makeInitialMove(to);
                         if(legalMove){
                             if(model.isPartOfThreeInARow(to)){
-                                Log.d(TAG, "ACTION_UP - partOfThreeInARow");
                                 model.setGameState(NineMensMorrisGame.GameState.REMOVE_PIECE);
                             }
                             else{
@@ -138,7 +165,6 @@ public class GameView extends View {
                         boolean legalMove = model.makeMove(to, from);
                         if(legalMove){
                             if(model.isPartOfThreeInARow(to)){
-                                Log.d(TAG, "ACTION_UP - partOfThreeInARow");
                                 model.setGameState(NineMensMorrisGame.GameState.REMOVE_PIECE);
                             }
                             else{
@@ -154,6 +180,13 @@ public class GameView extends View {
         return true;
     }
 
+    /**
+     * Method for getting row col int values, when we have width and height values from view.
+     * playing field is divided in 7 columns and 7 rows.
+     * @param x
+     * @param y
+     * @return
+     */
     private int[] getRowCol(int x, int y){
         int row = - 1, col = - 1;
         if(x < (width * (7.0 / 7))) col = 7;
@@ -173,6 +206,13 @@ public class GameView extends View {
         return new int[]{row, col};
     }
 
+    /**
+     * Method returning a game point if row and col corresponds to a valid point.
+     * not all coords (row, col) will return a valid point due to the playing field of NMM.
+     *
+     * @param coords
+     * @return
+     */
     private int getCellIndex(int[] coords){
         int row = coords[0];
         int col = coords[1];
@@ -203,6 +243,11 @@ public class GameView extends View {
         return -1;
     }
 
+    /**
+     * Method returning row and col from a playing field point.
+     * @param cellIndex
+     * @return
+     */
     private int[] getRowColFromCellIndex(int cellIndex){
         if(cellIndex == 1) return new int[]{3, 3};
         if(cellIndex == 2) return new int[]{2, 2};
@@ -231,6 +276,12 @@ public class GameView extends View {
         return new int[]{-1, -1};
     }
 
+    /**
+     * Method returning the correct place to render a game piece at on the canvas, this
+     * according to row and col.
+     * @param rowCol
+     * @return
+     */
     private int[] getPiecePlacementCoordsFromRowCol(int[] rowCol){
         int row = rowCol[0];
         int col = rowCol[1];
@@ -261,6 +312,9 @@ public class GameView extends View {
         return new int[]{10, 10};
     }
 
+    /**
+     * Method used to draw pieces on playing field according to the model playing field status.
+     */
     private void updatePieces(){
         List<Piece> newList = new ArrayList<>();
         for(int i = 1; i < model.getPlayfield().length; i++){
@@ -276,16 +330,21 @@ public class GameView extends View {
                 newList.add(new Piece(d, i, NineMensMorrisGame.Player.RED));
             }
         }
-        Log.d(TAG, "updatePieces: " + newList.size());
         pieces = newList;
     }
 
+    /**
+     * Method to reset model at new game.
+     */
     public void reset(){
         model.reset();
         updatePieces();
         invalidate();
     }
 
+    /**
+     * Class representing the game pieces used on the playing field.
+     */
     private class Piece{
         private Drawable drawable;
         private int cellIndex;

@@ -2,6 +2,9 @@ package com.example.erik.ninemensmorrisassignment.model;
 
 import java.io.Serializable;
 
+/**
+ * Represent the state of game model to be serialized and saved on device.
+ */
 public class GameData implements Serializable {
 
     private NineMensMorrisGame.PlayfieldPosition[] playfield;
