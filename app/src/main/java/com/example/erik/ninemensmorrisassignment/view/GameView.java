@@ -26,8 +26,6 @@ import java.util.List;
  */
 public class GameView extends View {
 
-    public static final String TAG = "GameView";
-
     private Drawable background;
     private NineMensMorrisGame model;
     private int width;
