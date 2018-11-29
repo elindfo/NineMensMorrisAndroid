@@ -12,7 +12,7 @@ import com.example.erik.ninemensmorrisassignment.model.NineMensMorrisGame;
 import com.example.erik.ninemensmorrisassignment.view.GameView;
 
 /**
- * Game activity holds the view that the game is played on.
+ * GameActivity holds the view that the game is played on.
  */
 public class GameActivity extends AppCompatActivity {
 
@@ -28,6 +28,15 @@ public class GameActivity extends AppCompatActivity {
         NineMensMorrisGame.getInstance().load();
         setContentView(R.layout.activity_game);
         gameView = findViewById(R.id.game_view);
+    }
+
+    /**
+     * Saves model state at activity stopped.
+     */
+    @Override
+    protected void onStop() {
+        NineMensMorrisGame.getInstance().save();
+        super.onStop();
     }
 
     /**
