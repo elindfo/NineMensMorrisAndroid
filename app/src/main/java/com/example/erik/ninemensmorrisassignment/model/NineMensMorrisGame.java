@@ -1,5 +1,18 @@
 package com.example.erik.ninemensmorrisassignment.model;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.example.erik.ninemensmorrisassignment.MainActivity;
+import com.example.erik.ninemensmorrisassignment.shape.GameView;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 /**
  * @author Jonas W�hsl�n, jwi@kth.se. 
  * Revised by Anders Lindstr�m, anderslm@kth.se
@@ -20,9 +33,7 @@ package com.example.erik.ninemensmorrisassignment.model;
 
 public class NineMensMorrisGame {
 
-	public static NineMensMorrisGame instance;
-
-
+	private static NineMensMorrisGame instance;
 
 	public enum Player{
 		RED, BLUE
@@ -53,9 +64,90 @@ public class NineMensMorrisGame {
 		return instance;
 	}
 
-	public PlayfieldPosition[] getPlayfield(){
-		return playfield;
+	public boolean save(){
+		Log.d(GameView.TAG, "Serialize: SAVE");
+		FileOutputStream fos = null;
+		ObjectOutputStream os = null;
+		try {
+			GameData data = new GameData(
+					playfield,
+					blueMarker,
+					redMarker,
+					redMarkersPlaced,
+					blueMarkersPlaced,
+					currentPlayer,
+					gameState
+			);
+			fos = ApplicationContextProvider.getContext().openFileOutput("gamedata.ser", Context.MODE_PRIVATE);
+			os = new ObjectOutputStream(fos);
+			os.writeObject(data);
+			Log.d(GameView.TAG, "Serialize: SAVE - SUCCESSFUL");
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally{
+			if(os != null){
+				try {
+					os.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(fos != null){
+				try {
+					fos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		Log.d(GameView.TAG, "Serialize: SAVE - NOT SUCCESSFUL");
+		return false;
 	}
+
+	public boolean load(){
+		Log.d(GameView.TAG, "Serialize: LOAD");
+		FileInputStream fis = null;
+		ObjectInputStream is = null;
+		try {
+			fis = ApplicationContextProvider.getContext().openFileInput("gamedata.ser");
+			is = new ObjectInputStream(fis);
+			GameData data = (GameData) is.readObject();
+			playfield = data.getPlayfield();
+			blueMarker = data.getBlueMarker();
+			redMarker = data.getRedMarker();
+			blueMarkersPlaced = data.getBlueMarkersPlaced();
+			redMarkersPlaced = data.getRedMarkersPlaced();
+			currentPlayer = data.getCurrentPlayer();
+			gameState = data.getGameState();
+			Log.d(GameView.TAG, "Serialize: LOAD - SUCCESSFUL");
+			return true;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally{
+			if(is != null){
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(fis != null){
+				try {
+					fis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		Log.d(GameView.TAG, "Serialize: LOAD - NOT SUCCESSFUL");
+		return false;
+	}
+
 
 	public void reset(){
 		playfield = new PlayfieldPosition[25]; // zeroes
@@ -66,10 +158,6 @@ public class NineMensMorrisGame {
 		redMarkersPlaced = blueMarkersPlaced = 0;
 		gameState = GameState.INITIAL;
 		currentPlayer = getRandomPlayer();
-	}
-
-	public GameState getGameState(){
-		return gameState;
 	}
 
 	public boolean makeInitialMove(int to) throws IllegalArgumentException{
@@ -108,9 +196,6 @@ public class NineMensMorrisGame {
 		return false;
 	}
 
-	/**
-	 * Returns true if a move is successful
-	 */
 	public boolean makeMove(int to, int from) throws IllegalArgumentException{
 		if(gameState == GameState.POST_INITIAL){
 			if(to < 0 || to >= playfield.length || from < 0 || from >= playfield.length){
@@ -147,9 +232,6 @@ public class NineMensMorrisGame {
 		return false;
 	}
 
-	/**
-	 * Returns true if position "to" is part of three in a row.
-	 */
 	public boolean isPartOfThreeInARow(int to) throws IllegalArgumentException{
 		if(to < 0 || to >= playfield.length){
 			throw new IllegalArgumentException();
@@ -216,10 +298,6 @@ public class NineMensMorrisGame {
 		}
 	}
 
-	/**
-	 * Request to remove a marker for the selected player.
-	 * Returns true if the marker where successfully removed
-	 */
 	public boolean remove(int from) throws IllegalArgumentException{
 		if(from < 0 || from >= playfield.length){
 			throw new IllegalArgumentException();
@@ -241,9 +319,6 @@ public class NineMensMorrisGame {
 		return false;
 	}
 
-	/**
-	 *  Returns true if the selected player have less than three markers left.
-	 */
 	public boolean isWinner() {
 		if(currentPlayer == Player.RED){
 			if(blueMarker < 3){
@@ -258,19 +333,6 @@ public class NineMensMorrisGame {
 		return false;
 	}
 
-	/**
-	 * Returns EMPTY_SPACE = 0 BLUE_MARKER = 4 READ_MARKER = 5
-	 */
-	public PlayfieldPosition board(int from) throws IllegalArgumentException{
-		if(from < 0 || from >= playfield.length){
-			throw new IllegalArgumentException();
-		}
-		return playfield[from];
-	}
-	
-	/**
-	 * Check whether this is a legal move.
-	 */
 	private boolean isValidMove(int to, int from) throws IllegalArgumentException{
 		if(to < 0 || to >= playfield.length || from < 0 || from >= playfield.length){
 			throw new IllegalArgumentException();
@@ -335,8 +397,16 @@ public class NineMensMorrisGame {
 		return currentPlayer;
 	}
 
+	public PlayfieldPosition[] getPlayfield(){
+		return playfield;
+	}
+
 	private Player getRandomPlayer(){
 		return (int)(Math.random() * 10) % 2 == 0 ? Player.RED : Player.BLUE;
+	}
+
+	public GameState getGameState(){
+		return gameState;
 	}
 
 	public void setGameState(GameState gameState) {
@@ -350,19 +420,5 @@ public class NineMensMorrisGame {
 		else{
 			gameState = GameState.INITIAL;
 		}
-	}
-
-	public void printGame(){
-		System.out.println("Current player: " + currentPlayer);
-		System.out.println("Game State: " + gameState);
-		System.out.println("Placed on board - Red: " + redMarkersPlaced + ", Blue: " + blueMarkersPlaced);
-		System.out.println();
-		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", playfield[3], "", "", playfield[6], "", "", playfield[9]);
-		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", "", playfield[2], "", playfield[5], "", playfield[8], "");
-		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", "", "", playfield[1], playfield[4], playfield[7], "", "");
-		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", playfield[24], playfield[23], playfield[22], "", playfield[10], playfield[11], playfield[12]);
-		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", "", "", playfield[19], playfield[16], playfield[13], "", "");
-		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", "", playfield[20], "", playfield[17], "", playfield[14], "");
-		System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s\n", playfield[21], "", "", playfield[18], "", "", playfield[15]);
 	}
 }

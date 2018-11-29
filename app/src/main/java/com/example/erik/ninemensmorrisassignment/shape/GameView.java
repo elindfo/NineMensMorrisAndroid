@@ -21,40 +21,27 @@ import java.util.List;
 
 public class GameView extends View {
 
-    private static final String TAG = "GameView";
+    public static final String TAG = "GameView";
 
     private Drawable background;
     private NineMensMorrisGame model;
-
     private int width;
     private int height;
-
     private int from = -1;
-
     private int circleDiameter;
-
     private List<Piece> pieces;
-
     private Context context;
-
     private Piece selectedPiece = null;
-
-    public GameView(Context context) {
-        super(context);
-        model = NineMensMorrisGame.getInstance();
-        pieces = new ArrayList<>();
-        background = getResources().getDrawable(R.drawable.morrisplayfield);
-        updatePieces();
-        this.context = context;
-    }
 
     public GameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        Log.d(TAG, "GameView(Context, AttributeSet) called");
         model = NineMensMorrisGame.getInstance();
-        pieces = new ArrayList<>();
         background = getResources().getDrawable(R.drawable.morrisplayfield);
-        updatePieces();
         this.context = context;
+        setWillNotDraw(false);
+        updatePieces();
+        invalidate();
     }
 
     @Override
@@ -75,7 +62,7 @@ public class GameView extends View {
         }
 
         ((TextView)((Activity) context).findViewById(R.id.current_player_textview)).setText("Current Player: " + model.getCurrentPlayer());
-        if(NineMensMorrisGame.getInstance().getCurrentPlayer() == NineMensMorrisGame.Player.BLUE){
+        if(model.getCurrentPlayer() == NineMensMorrisGame.Player.BLUE){
             ((TextView)((Activity) context).findViewById(R.id.current_player_textview)).setTextColor(context.getColor(R.color.blue));
         } else {
             ((TextView)((Activity) context).findViewById(R.id.current_player_textview)).setTextColor(context.getColor(R.color.red));
@@ -97,7 +84,6 @@ public class GameView extends View {
                         invalidate();
                     }
                 }
-                //Log.d(TAG, "ACTION_MOVE - x: " + x + ", y: " + y);
                 break;
             }
             case MotionEvent.ACTION_DOWN:{
@@ -332,8 +318,4 @@ public class GameView extends View {
             this.player = player;
         }
     }
-
-
-
-
 }

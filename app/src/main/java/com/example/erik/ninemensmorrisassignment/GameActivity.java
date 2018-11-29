@@ -1,35 +1,27 @@
 package com.example.erik.ninemensmorrisassignment;
 
-import android.content.res.ColorStateList;
-import android.content.res.Configuration;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erik.ninemensmorrisassignment.model.NineMensMorrisGame;
 import com.example.erik.ninemensmorrisassignment.shape.GameView;
 
-import static com.example.erik.ninemensmorrisassignment.R.menu.menu;
-
 public class GameActivity extends AppCompatActivity {
 
     private GameView gameView;
-    private Button resetButton;
-    private TextView currentPlayerText;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        NineMensMorrisGame.getInstance().load();
         setContentView(R.layout.activity_game);
         gameView = findViewById(R.id.game_view);
-        currentPlayerText = findViewById(R.id.current_player_textview);
     }
 
     @Override
@@ -38,24 +30,20 @@ public class GameActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_refresh:
-                gameView.reset();
-                gameView.invalidate();
-                Toast.makeText(this, "New game started", Toast.LENGTH_LONG);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+    protected void onPause(){
+        super.onPause();
     }
 
     @Override
     protected void onStop() {
-
         super.onStop();
     }
 
-
+    @Override
+    protected void onDestroy(){
+        NineMensMorrisGame.getInstance().save();
+        super.onDestroy();
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
@@ -69,14 +57,14 @@ public class GameActivity extends AppCompatActivity {
         return true;
     }
 
-    public void updateText(String text){
-        StringBuffer sb = new StringBuffer();
-        if(NineMensMorrisGame.getInstance().getCurrentPlayer() == NineMensMorrisGame.Player.BLUE){
-            currentPlayerText.setTextColor(getApplicationContext().getColor(R.color.blue));
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_refresh:
+                gameView.reset();
+                Toast.makeText(this, "New game started", Toast.LENGTH_LONG);
+                return true;
         }
-        else{
-            currentPlayerText.setTextColor(getApplicationContext().getColor(R.color.red));
-        }
-        currentPlayerText.setText(text);
+        return super.onOptionsItemSelected(item);
     }
 }
