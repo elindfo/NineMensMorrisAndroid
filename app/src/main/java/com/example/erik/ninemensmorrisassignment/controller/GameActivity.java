@@ -1,6 +1,5 @@
-package com.example.erik.ninemensmorrisassignment;
+package com.example.erik.ninemensmorrisassignment.controller;
 
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,8 +7,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.erik.ninemensmorrisassignment.R;
 import com.example.erik.ninemensmorrisassignment.model.NineMensMorrisGame;
-import com.example.erik.ninemensmorrisassignment.shape.GameView;
+import com.example.erik.ninemensmorrisassignment.view.GameView;
 
 /**
  * Game activity holds the view that the game is played on.

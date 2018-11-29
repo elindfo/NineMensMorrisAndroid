@@ -1,9 +1,6 @@
 package com.example.erik.ninemensmorrisassignment.model;
 
 import android.content.Context;
-import android.util.Log;
-
-import com.example.erik.ninemensmorrisassignment.shape.GameView;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -79,7 +76,6 @@ public class NineMensMorrisGame {
 	 * @return true if successful
 	 */
 	public boolean save(){
-		Log.d(GameView.TAG, "Serialize: SAVE");
 		FileOutputStream fos = null;
 		ObjectOutputStream os = null;
 		try {
@@ -95,7 +91,6 @@ public class NineMensMorrisGame {
 			fos = ApplicationContextProvider.getContext().openFileOutput("gamedata.ser", Context.MODE_PRIVATE);
 			os = new ObjectOutputStream(fos);
 			os.writeObject(data);
-			Log.d(GameView.TAG, "Serialize: SAVE - SUCCESSFUL");
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -115,7 +110,6 @@ public class NineMensMorrisGame {
 				}
 			}
 		}
-		Log.d(GameView.TAG, "Serialize: SAVE - NOT SUCCESSFUL");
 		return false;
 	}
 
@@ -124,7 +118,6 @@ public class NineMensMorrisGame {
 	 * @return true if successful
 	 */
 	public boolean load(){
-		Log.d(GameView.TAG, "Serialize: LOAD");
 		FileInputStream fis = null;
 		ObjectInputStream is = null;
 		try {
@@ -138,7 +131,6 @@ public class NineMensMorrisGame {
 			redMarkersPlaced = data.getRedMarkersPlaced();
 			currentPlayer = data.getCurrentPlayer();
 			gameState = data.getGameState();
-			Log.d(GameView.TAG, "Serialize: LOAD - SUCCESSFUL");
 			return true;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -162,7 +154,6 @@ public class NineMensMorrisGame {
 				}
 			}
 		}
-		Log.d(GameView.TAG, "Serialize: LOAD - NOT SUCCESSFUL");
 		return false;
 	}
 

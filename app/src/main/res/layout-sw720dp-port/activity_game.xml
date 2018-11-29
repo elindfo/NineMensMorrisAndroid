@@ -9,9 +9,9 @@ Used by 10" Tablets with screen width of at least 720dp
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    tools:context=".GameActivity">
+    tools:context=".controller.GameActivity">
 
-    <com.example.erik.ninemensmorrisassignment.shape.GameView
+    <com.example.erik.ninemensmorrisassignment.view.GameView
         android:id="@+id/game_view"
         android:layout_width="715dp"
         android:layout_height="715dp"

@@ -1,4 +1,4 @@
-package com.example.erik.ninemensmorrisassignment;
+package com.example.erik.ninemensmorrisassignment.controller;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.example.erik.ninemensmorrisassignment.R;
+import com.example.erik.ninemensmorrisassignment.controller.GameActivity;
 
 /**
  * Activity containing welcome screen with name of app and a menu button for resuming / new game.

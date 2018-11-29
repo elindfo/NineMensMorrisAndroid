@@ -1,4 +1,4 @@
-package com.example.erik.ninemensmorrisassignment.shape;
+package com.example.erik.ninemensmorrisassignment.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
